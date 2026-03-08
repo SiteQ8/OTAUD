@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTAUD — OT/ICS/IoT Security Auditing Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-primary:#060a10;--bg-secondary:#0c1219;--bg-card:#0f1820;--bg-card-hover:#141f2a;
+  --accent:#f0c040;--accent-dim:#c49a2a;--accent-glow:rgba(240,192,64,0.15);
+  --red:#e74c3c;--orange:#f39c12;--green:#2ecc71;--blue:#3498db;--cyan:#1abc9c;
+  --text-primary:#e2e8f0;--text-secondary:#8899aa;--text-dim:#4a5c6e;
+  --border:#1a2a3a;--border-light:#243444;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color:var(--text-primary);overflow-x:hidden;line-height:1.6}
+
+/* Noise texture overlay */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4}
+
+/* ─── HEADER / HERO ─── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 20px;
+  background:radial-gradient(ellipse at 30% 20%,rgba(240,192,64,0.06) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 80%,rgba(52,152,219,0.04) 0%,transparent 60%),
+             var(--bg-primary)}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
+  background:linear-gradient(transparent,var(--bg-primary));pointer-events:none}
+
+.logo-container{margin-bottom:40px;position:relative}
+.logo-ascii{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:clamp(10px,2vw,16px);line-height:1.3;
+  white-space:pre;text-shadow:0 0 30px rgba(240,192,64,0.3);animation:glow 4s ease-in-out infinite alternate}
+@keyframes glow{0%{text-shadow:0 0 20px rgba(240,192,64,0.2)}100%{text-shadow:0 0 40px rgba(240,192,64,0.4),0 0 80px rgba(240,192,64,0.1)}}
+
+.hero h1{font-size:clamp(32px,5vw,56px);font-weight:900;letter-spacing:4px;margin:20px 0 10px;
+  background:linear-gradient(135deg,var(--accent),#fff,var(--accent));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.hero .tagline{font-size:clamp(14px,2vw,20px);color:var(--text-secondary);letter-spacing:2px;text-transform:uppercase;
+  font-weight:300;margin-bottom:10px}
+.hero .subtitle{font-size:15px;color:var(--text-dim);max-width:700px;text-align:center;margin-bottom:40px}
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.badge{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  border:1px solid var(--border-light);background:var(--bg-card)}
+.badge.ics{color:var(--red);border-color:rgba(231,76,60,0.3)}
+.badge.iot{color:var(--cyan);border-color:rgba(26,188,156,0.3)}
+.badge.ot{color:var(--accent);border-color:rgba(240,192,64,0.3)}
+.badge.open{color:var(--green);border-color:rgba(46,204,113,0.3)}
+
+.cta-group{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;z-index:1}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;
+  text-decoration:none;transition:all .3s ease;cursor:pointer;border:none;letter-spacing:0.5px}
+.btn-primary{background:var(--accent);color:#0a0e17;box-shadow:0 4px 20px rgba(240,192,64,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,192,64,0.4)}
+.btn-secondary{background:transparent;color:var(--text-primary);border:1px solid var(--border-light)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ─── NAV ─── */
+nav{position:sticky;top:0;z-index:100;background:rgba(6,10,16,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:0 20px}
+nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+nav .brand{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700;font-size:18px;letter-spacing:2px}
+nav .links{display:flex;gap:24px}
+nav .links a{color:var(--text-secondary);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:1px;
+  text-transform:uppercase;transition:color .2s}
+nav .links a:hover{color:var(--accent)}
+
+/* ─── SECTIONS ─── */
+section{padding:80px 20px}
+.container{max-width:1200px;margin:0 auto}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:3px;
+  text-transform:uppercase;margin-bottom:8px}
+.section-title{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:16px;
+  background:linear-gradient(135deg,var(--text-primary),var(--text-secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-desc{color:var(--text-secondary);font-size:16px;max-width:700px;margin-bottom:50px}
+
+/* ─── STATS ─── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:60px 0}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:30px;text-align:center;
+  transition:all .3s ease}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 10px 40px rgba(0,0,0,0.3)}
+.stat-card .number{font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.stat-card .label{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px}
+
+/* ─── MODULES GRID ─── */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:28px;
+  transition:all .3s ease;position:relative;overflow:hidden}
+.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.module-card:hover{border-color:var(--accent-dim);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.module-card:hover::before{opacity:1}
+.module-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px}
+.module-card h3{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--text-primary)}
+.module-card p{font-size:13px;color:var(--text-secondary);line-height:1.7}
+.module-card .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.module-card .tag{font-size:10px;padding:3px 8px;border-radius:4px;background:var(--bg-primary);
+  color:var(--text-dim);border:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+
+.icon-network{background:rgba(52,152,219,0.15);color:var(--blue)}
+.icon-protocol{background:rgba(231,76,60,0.15);color:var(--red)}
+.icon-config{background:rgba(243,156,18,0.15);color:var(--orange)}
+.icon-plc{background:rgba(240,192,64,0.15);color:var(--accent)}
+.icon-scada{background:rgba(155,89,182,0.15);color:#9b59b6}
+.icon-iot{background:rgba(26,188,156,0.15);color:var(--cyan)}
+.icon-firmware{background:rgba(46,204,113,0.15);color:var(--green)}
+.icon-compliance{background:rgba(52,73,94,0.15);color:#ecf0f1}
+
+/* ─── ARCHITECTURE ─── */
+.arch-diagram{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:40px;margin:30px 0}
+.arch-layers{display:flex;flex-direction:column;gap:2px}
+.arch-layer{display:flex;align-items:center;padding:16px 24px;border-radius:8px;font-size:14px;font-weight:500;gap:16px}
+.arch-layer .layer-name{font-family:'JetBrains Mono',monospace;min-width:200px;font-weight:600}
+.arch-layer .layer-desc{color:var(--text-secondary);font-size:13px}
+.layer-5{background:rgba(52,152,219,0.08);border-left:3px solid var(--blue)}
+.layer-4{background:rgba(155,89,182,0.08);border-left:3px solid #9b59b6}
+.layer-3{background:rgba(243,156,18,0.08);border-left:3px solid var(--orange)}
+.layer-2{background:rgba(231,76,60,0.08);border-left:3px solid var(--red)}
+.layer-1{background:rgba(26,188,156,0.08);border-left:3px solid var(--cyan)}
+.layer-0{background:rgba(46,204,113,0.08);border-left:3px solid var(--green)}
+
+/* ─── PROTOCOLS ─── */
+.proto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:30px 0}
+.proto-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;
+  transition:all .2s}
+.proto-card:hover{border-color:var(--accent);background:var(--bg-card-hover)}
+.proto-card .proto-name{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.proto-card .proto-port{font-size:11px;color:var(--text-dim)}
+.proto-card .proto-vendor{font-size:11px;color:var(--text-secondary);margin-top:4px}
+
+/* ─── CODE BLOCK ─── */
+.code-block{background:#0a0f15;border:1px solid var(--border);border-radius:10px;padding:24px;margin:20px 0;
+  font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;overflow-x:auto;position:relative}
+.code-block .prompt{color:var(--green)}
+.code-block .comment{color:var(--text-dim)}
+.code-block .flag{color:var(--cyan)}
+.code-block .value{color:var(--orange)}
+
+/* ─── COMPLIANCE ─── */
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:30px 0}
+.compliance-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px;
+  transition:all .3s}
+.compliance-card:hover{border-color:var(--accent)}
+.compliance-card h4{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--accent)}
+.compliance-card p{font-size:12px;color:var(--text-secondary);line-height:1.6}
+
+/* ─── PYTHON MODULES ─── */
+.python-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:30px 0}
+.python-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:24px}
+.python-card h4{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--green)}
+.python-card code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);
+  background:var(--bg-primary);padding:2px 6px;border-radius:4px}
+.python-card p{font-size:13px;color:var(--text-secondary);margin-top:8px}
+
+/* ─── FOOTER ─── */
+footer{padding:40px 20px;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:13px}
+footer a{color:var(--accent);text-decoration:none}
+
+/* ─── SCROLL ANIMATIONS ─── */
+.fade-in{opacity:0;transform:translateY(30px);transition:all 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .modules-grid,.compliance-grid,.python-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  nav .links{display:none}
+  .arch-layer{flex-direction:column;gap:4px}
+  .arch-layer .layer-name{min-width:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="logo-container">
+    <pre class="logo-ascii">
+   ▄██████▄      ███        ▄████████ ███    █▄  ████████▄  
+  ███    ███  ▀█████████▄  ███    ███ ███    ███ ███   ▀███ 
+  ███    ███     ▀███▀▀██  ███    ███ ███    ███ ███    ███ 
+  ███    ███      ███   ▀  ███    ███ ███    ███ ███    ███ 
+  ███    ███      ███    ▀███████████ ███    ███ ███    ███ 
+  ███    ███      ███      ███    ███ ███    ███ ███    ███ 
+  ███    ███      ███      ███    ███ ███    ███ ███   ▄███ 
+   ▀██████▀      ▄████▀    ███    █▀  ████████▀  ████████▀  
+    </pre>
+  </div>
+  <h1>OTAUD</h1>
+  <div class="tagline">OT / ICS / IoT Security Auditing Toolkit</div>
+  <div class="subtitle">A comprehensive, open-source framework for discovering misconfigurations, assessing vulnerabilities, and validating compliance across your entire Operational Technology environment.</div>
+  <div class="hero-badges">
+    <span class="badge ics">ICS Security</span>
+    <span class="badge iot">IoT Audit</span>
+    <span class="badge ot">OT Hardening</span>
+    <span class="badge open">Open Source</span>
+  </div>
+  <div class="cta-group">
+    <a href="https://github.com/SiteQ8/OTAUD" class="btn btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      Get Started
+    </a>
+    <a href="#modules" class="btn btn-secondary">Explore Modules</a>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <div class="inner">
+    <div class="brand">OTAUD</div>
+    <div class="links">
+      <a href="#modules">Modules</a>
+      <a href="#protocols">Protocols</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#python">Python Tools</a>
+      <a href="#compliance">Compliance</a>
+      <a href="#usage">Usage</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ STATS ═══ -->
+<section>
+  <div class="container">
+    <div class="stats-grid fade-in">
+      <div class="stat-card"><div class="number">8</div><div class="label">Audit Modules</div></div>
+      <div class="stat-card"><div class="number">10+</div><div class="label">OT Protocols</div></div>
+      <div class="stat-card"><div class="number">5</div><div class="label">Python Tools</div></div>
+      <div class="stat-card"><div class="number">4</div><div class="label">Compliance Standards</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MODULES ═══ -->
+<section id="modules">
+  <div class="container">
+    <div class="section-label fade-in">// Core Modules</div>
+    <h2 class="section-title fade-in">Audit Modules</h2>
+    <p class="section-desc fade-in">Each module targets a specific layer of OT security — from network discovery to compliance validation. Run them individually or orchestrate a full audit.</p>
+    <div class="modules-grid">
+      <div class="module-card fade-in">
+        <div class="module-icon icon-network">&#128225;</div>
+        <h3>Network Scanner</h3>
+        <p>Host discovery, OT-specific port scanning (40+ industrial ports), MAC-based vendor identification, and service banner grabbing.</p>
+        <div class="tags"><span class="tag">nmap</span><span class="tag">arp</span><span class="tag">ping</span><span class="tag">banner-grab</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-protocol">&#128274;</div>
+        <h3>Protocol Auditor</h3>
+        <p>Deep analysis of 10+ industrial protocols: Modbus TCP, DNP3, S7comm, EtherNet/IP, OPC-UA, BACnet, MQTT, CoAP, FINS, HART-IP.</p>
+        <div class="tags"><span class="tag">modbus</span><span class="tag">dnp3</span><span class="tag">s7</span><span class="tag">mqtt</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-config">&#9881;</div>
+        <h3>Configuration Audit</h3>
+        <p>Checks for default credentials (18+ vendor-specific), weak SNMP communities, insecure web interfaces, TLS misconfigurations, and exposed services.</p>
+        <div class="tags"><span class="tag">creds</span><span class="tag">snmp</span><span class="tag">tls</span><span class="tag">headers</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-plc">&#9889;</div>
+        <h3>PLC / HMI Check</h3>
+        <p>Identifies PLC types (Siemens, Allen-Bradley, Omron, Mitsubishi, Schneider), checks access controls, CPU protection level, and HMI web exposure.</p>
+        <div class="tags"><span class="tag">siemens</span><span class="tag">allen-bradley</span><span class="tag">omron</span><span class="tag">vnc</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-scada">&#128200;</div>
+        <h3>SCADA System Audit</h3>
+        <p>Identifies SCADA web platforms (Ignition, WinCC, FactoryTalk, etc.), checks historian exposure, database security, and network segmentation.</p>
+        <div class="tags"><span class="tag">ignition</span><span class="tag">wincc</span><span class="tag">historian</span><span class="tag">segmentation</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-iot">&#128225;</div>
+        <h3>IoT Discovery</h3>
+        <p>Discovers IoT devices via mDNS/UPnP, checks MQTT brokers for anonymous access, tests default IoT credentials, and validates firmware update channels.</p>
+        <div class="tags"><span class="tag">mqtt</span><span class="tag">coap</span><span class="tag">upnp</span><span class="tag">cameras</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-firmware">&#128190;</div>
+        <h3>Firmware Analysis</h3>
+        <p>Extracts firmware versions, matches against known CVE database, checks for debug interfaces, TFTP exposure, and unsigned update mechanisms.</p>
+        <div class="tags"><span class="tag">cve-check</span><span class="tag">debug</span><span class="tag">tftp</span><span class="tag">bootloader</span></div>
+      </div>
+      <div class="module-card fade-in">
+        <div class="module-icon icon-compliance">&#128203;</div>
+        <h3>Compliance Checker</h3>
+        <p>Validates against IEC 62443, NIST SP 800-82, NERC CIP, and ISO 27001. Provides baseline scoring and framework-specific control checks.</p>
+        <div class="tags"><span class="tag">IEC 62443</span><span class="tag">NIST</span><span class="tag">NERC CIP</span><span class="tag">ISO 27001</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROTOCOLS ═══ -->
+<section id="protocols" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-label fade-in">// Protocol Coverage</div>
+    <h2 class="section-title fade-in">Industrial Protocols Analyzed</h2>
+    <p class="section-desc fade-in">OTAUD checks for misconfigurations, unauthorized access, and missing authentication across all major ICS/OT communication protocols.</p>
+    <div class="proto-grid fade-in">
+      <div class="proto-card"><div class="proto-name">Modbus TCP</div><div class="proto-port">Port 502</div><div class="proto-vendor">Schneider, ABB, Moxa</div></div>
+      <div class="proto-card"><div class="proto-name">DNP3</div><div class="proto-port">Port 20000</div><div class="proto-vendor">Power Grid / Utilities</div></div>
+      <div class="proto-card"><div class="proto-name">S7comm</div><div class="proto-port">Port 102</div><div class="proto-vendor">Siemens</div></div>
+      <div class="proto-card"><div class="proto-name">EtherNet/IP</div><div class="proto-port">Port 44818</div><div class="proto-vendor">Rockwell / Allen-Bradley</div></div>
+      <div class="proto-card"><div class="proto-name">OPC-UA</div><div class="proto-port">Port 4840</div><div class="proto-vendor">Cross-vendor</div></div>
+      <div class="proto-card"><div class="proto-name">BACnet/IP</div><div class="proto-port">Port 47808</div><div class="proto-vendor">Building Automation</div></div>
+      <div class="proto-card"><div class="proto-name">MQTT</div><div class="proto-port">Port 1883/8883</div><div class="proto-vendor">IoT / Telemetry</div></div>
+      <div class="proto-card"><div class="proto-name">CoAP</div><div class="proto-port">Port 5683</div><div class="proto-vendor">Constrained IoT</div></div>
+      <div class="proto-card"><div class="proto-name">FINS</div><div class="proto-port">Port 9600</div><div class="proto-vendor">Omron</div></div>
+      <div class="proto-card"><div class="proto-name">HART-IP</div><div class="proto-port">Port 5094</div><div class="proto-vendor">Process Instruments</div></div>
+      <div class="proto-card"><div class="proto-name">IEC 60870-5-104</div><div class="proto-port">Port 2404</div><div class="proto-vendor">Power Grid SCADA</div></div>
+      <div class="proto-card"><div class="proto-name">MELSEC</div><div class="proto-port">Port 5007</div><div class="proto-vendor">Mitsubishi</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ARCHITECTURE ═══ -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label fade-in">// Purdue Model Mapping</div>
+    <h2 class="section-title fade-in">OT Security Architecture</h2>
+    <p class="section-desc fade-in">OTAUD's modules map to the Purdue Enterprise Reference Architecture (ISA-95), covering every layer from the physical process to the enterprise network.</p>
+    <div class="arch-diagram fade-in">
+      <div class="arch-layers">
+        <div class="arch-layer layer-5"><span class="layer-name">Level 5 — Enterprise</span><span class="layer-desc">Corporate IT network, email, ERP → Config Audit, Network Scan</span></div>
+        <div class="arch-layer layer-4"><span class="layer-name">Level 4 — IT/OT DMZ</span><span class="layer-desc">Firewalls, jump hosts, data diodes → Compliance, Segmentation Check</span></div>
+        <div class="arch-layer layer-3"><span class="layer-name">Level 3 — Site Operations</span><span class="layer-desc">SCADA servers, historians, HMI → SCADA Audit, Firmware Analysis</span></div>
+        <div class="arch-layer layer-2"><span class="layer-name">Level 2 — Area Control</span><span class="layer-desc">PLCs, RTUs, DCS → PLC Check, Protocol Audit</span></div>
+        <div class="arch-layer layer-1"><span class="layer-name">Level 1 — Basic Control</span><span class="layer-desc">Sensors, actuators, I/O → IoT Scan, Firmware Check</span></div>
+        <div class="arch-layer layer-0"><span class="layer-name">Level 0 — Physical Process</span><span class="layer-desc">Valves, motors, pumps → Physical security (out of scope)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PYTHON TOOLS ═══ -->
+<section id="python" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-label fade-in">// Advanced Analysis</div>
+    <h2 class="section-title fade-in">Python Modules</h2>
+    <p class="section-desc fade-in">Deep-dive Python tools for protocol-level auditing, CVE intelligence, and professional report generation.</p>
+    <div class="python-grid fade-in">
+      <div class="python-card">
+        <h4>Modbus TCP Auditor</h4>
+        <code>python3 python/modbus_audit.py -t &lt;ip&gt;</code>
+        <p>Enumerates unit IDs, tests all function codes, reads device identification, samples holding registers for information disclosure.</p>
+      </div>
+      <div class="python-card">
+        <h4>DNP3 Protocol Checker</h4>
+        <code>python3 python/dnp3_check.py -t &lt;ip&gt;</code>
+        <p>Validates Secure Authentication status, enumerates outstation addresses, tests broadcast response handling.</p>
+      </div>
+      <div class="python-card">
+        <h4>MQTT Broker Auditor</h4>
+        <code>python3 python/mqtt_audit.py -t &lt;ip&gt;</code>
+        <p>Tests anonymous access, default credentials, wildcard subscriptions, $SYS topic exposure, and TLS configuration.</p>
+      </div>
+      <div class="python-card">
+        <h4>OPC-UA Scanner</h4>
+        <code>python3 python/opcua_scan.py -t &lt;ip&gt;</code>
+        <p>Validates security policies, checks for anonymous authentication, tests certificate configuration and TLS settings.</p>
+      </div>
+      <div class="python-card">
+        <h4>CVE Lookup</h4>
+        <code>python3 python/cve_lookup.py -q &lt;vendor&gt;</code>
+        <p>Curated database of 25+ critical ICS CVEs. Optional NVD API integration for real-time lookup. Covers all major OT vendors.</p>
+      </div>
+      <div class="python-card">
+        <h4>Report Generator</h4>
+        <code>python3 python/report_gen.py -l &lt;log&gt; -o report.html</code>
+        <p>Generates professional HTML/JSON reports from audit logs with severity classification and remediation guidance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPLIANCE ═══ -->
+<section id="compliance">
+  <div class="container">
+    <div class="section-label fade-in">// Standards &amp; Frameworks</div>
+    <h2 class="section-title fade-in">Compliance Standards</h2>
+    <p class="section-desc fade-in">OTAUD validates your OT environment against the world's leading industrial cybersecurity frameworks.</p>
+    <div class="compliance-grid fade-in">
+      <div class="compliance-card">
+        <h4>IEC 62443</h4>
+        <p>Full coverage of Foundational Requirements (FR 1–7): Identification & Authentication, Use Control, System Integrity, Data Confidentiality, Restricted Data Flow, Event Response, Resource Availability.</p>
+      </div>
+      <div class="compliance-card">
+        <h4>NIST SP 800-82 Rev 3</h4>
+        <p>Guide to ICS Security — validates risk management, network architecture, defense-in-depth, firewall rules, and ICS-specific security recommendations.</p>
+      </div>
+      <div class="compliance-card">
+        <h4>NERC CIP v5/v7</h4>
+        <p>Critical Infrastructure Protection for electric sector: CIP-002 categorization, CIP-005 electronic security perimeters, CIP-007 system security, CIP-010 configuration management.</p>
+      </div>
+      <div class="compliance-card">
+        <h4>ISO 27001 (OT Context)</h4>
+        <p>Information Security Management applied to OT: Annex A controls for asset management, access control, operations security, communications security, and business continuity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ USAGE ═══ -->
+<section id="usage" style="background:var(--bg-secondary)">
+  <div class="container">
+    <div class="section-label fade-in">// Quick Start</div>
+    <h2 class="section-title fade-in">Usage Examples</h2>
+    <p class="section-desc fade-in">Get started in seconds. Clone, chmod, and run.</p>
+    <div class="code-block fade-in">
+<span class="comment"># Clone the repository</span>
+<span class="prompt">$</span> git clone https://github.com/SiteQ8/OTAUD.git
+<span class="prompt">$</span> cd OTAUD && chmod +x otaud.sh
+
+<span class="comment"># Full OT/ICS/IoT audit</span>
+<span class="prompt">$</span> sudo ./otaud.sh <span class="flag">-t</span> <span class="value">192.168.1.0/24</span> <span class="flag">-s</span> <span class="value">full</span>
+
+<span class="comment"># Quick network scan</span>
+<span class="prompt">$</span> ./otaud.sh <span class="flag">-t</span> <span class="value">10.0.0.50</span> <span class="flag">-s</span> <span class="value">quick</span> <span class="flag">-v</span>
+
+<span class="comment"># Single module (protocol audit)</span>
+<span class="prompt">$</span> ./otaud.sh <span class="flag">-t</span> <span class="value">172.16.0.100</span> <span class="flag">-m</span> <span class="value">protocol_audit</span>
+
+<span class="comment"># Compliance check against IEC 62443</span>
+<span class="prompt">$</span> ./otaud.sh <span class="flag">-t</span> <span class="value">192.168.2.0/24</span> <span class="flag">-s</span> <span class="value">compliance</span> <span class="flag">-c</span> <span class="value">iec62443</span>
+
+<span class="comment"># Interactive menu mode</span>
+<span class="prompt">$</span> sudo ./otaud.sh <span class="flag">--interactive</span>
+
+<span class="comment"># Python: Modbus deep audit</span>
+<span class="prompt">$</span> python3 python/modbus_audit.py <span class="flag">-t</span> <span class="value">10.0.0.50</span> <span class="flag">--json</span>
+
+<span class="comment"># Python: CVE lookup</span>
+<span class="prompt">$</span> python3 python/cve_lookup.py <span class="flag">-q</span> <span class="value">siemens</span> <span class="flag">--online</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <p style="color:var(--accent);font-family:'JetBrains Mono',monospace;font-weight:600;margin-bottom:8px">OTAUD v1.0.0</p>
+    <p>Built by <a href="https://github.com/SiteQ8">Ali AlEnezi (SiteQ8)</a> — Open Source under MIT License</p>
+    <p style="margin-top:8px">Securing Industrial Control Systems, one audit at a time.</p>
+  </div>
+</footer>
+
+<script>
+// Scroll animation observer
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Smooth scroll for nav links
+document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
