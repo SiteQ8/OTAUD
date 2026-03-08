@@ -4,7 +4,7 @@ This document outlines our policy for reporting security vulnerabilities in the 
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it by sending an email to **security@otaud.com**. Please include a detailed description of your findings, along with steps to reproduce the vulnerability if applicable.
+If you discover a security vulnerability, please report it by sending an email to **site@hotmail.com**. Please include a detailed description of your findings, along with steps to reproduce the vulnerability if applicable.
 
 ## Expected Response
 
