@@ -14,10 +14,4 @@ We will confirm receipt of your report within 48 hours and provide an estimated 
 
 After we have assessed the vulnerability and have released a fix, we will disclose the issue publicly, including detailed information about the vulnerability and how it was resolved.
 
-## Security Best Practices
-
-- Keep your software up to date.
-- Use strong and unique passwords.
-- Be cautious of suspicious emails or messages.
-
-Thank you for helping us keep our project secure!
+## Thank you for helping us keep our project secure!
