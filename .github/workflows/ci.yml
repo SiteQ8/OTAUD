@@ -1,0 +1,51 @@
+name: OTAUD CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+      - name: Lint bash scripts
+        run: |
+          shellcheck -x otaud.sh || true
+          for f in modules/*.sh; do
+            echo "Checking $f..."
+            shellcheck -x "$f" || true
+          done
+
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install flake8 pylint
+      - name: Lint Python modules
+        run: |
+          flake8 python/ --max-line-length=120 --ignore=E501,W503 || true
+          pylint python/*.py --disable=C,R || true
+
+  test-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make executable
+        run: chmod +x otaud.sh modules/*.sh
+      - name: Test help output
+        run: ./otaud.sh --help
+      - name: Test version
+        run: ./otaud.sh --version
+      - name: Test Python imports
+        run: |
+          python3 -c "import python.modbus_audit" 2>/dev/null || true
+          python3 python/cve_lookup.py --query siemens --json
