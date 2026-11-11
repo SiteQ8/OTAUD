@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — Audit Report Generator
+OTAUD: Audit Report Generator
 Generates HTML/JSON/TXT reports from audit log data.
 Author: Ali AlEnezi (SiteQ8)
 """
@@ -31,7 +31,7 @@ def parse_log(log_path):
 
 
 def generate_html_report(findings, target, standard, output_path):
-    """Generate professional HTML audit report."""
+    """Generate HTML audit report."""
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>

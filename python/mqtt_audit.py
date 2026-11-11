@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — MQTT Broker Security Auditor
+OTAUD: MQTT Broker Security Auditor
 Checks MQTT brokers for misconfigurations common in IoT/OT environments.
 Author: Ali AlEnezi (SiteQ8)
 """

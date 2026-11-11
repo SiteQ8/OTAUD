@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — Modbus TCP Security Auditor
+OTAUD: Modbus TCP Security Auditor
 Performs deep inspection of Modbus TCP devices for misconfigurations,
 unauthorized access, and information disclosure.
 Author: Ali AlEnezi (SiteQ8)
@@ -152,7 +152,7 @@ class ModbusAuditor:
             else:
                 print(f"  [-] {name} (0x{fc:02x}): No response")
 
-        # Check WRITE function codes (read-only test — no actual write)
+        # Check WRITE function codes (read-only test, no actual write)
         write_codes = [
             (FC_WRITE_SINGLE_COIL, "Write Single Coil"),
             (FC_WRITE_SINGLE_REGISTER, "Write Single Register"),

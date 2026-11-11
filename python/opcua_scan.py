@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — OPC-UA Security Scanner
+OTAUD: OPC-UA Security Scanner
 Checks OPC Unified Architecture servers for security misconfigurations.
 Author: Ali AlEnezi (SiteQ8)
 """

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — DNP3 Protocol Security Checker
+OTAUD: DNP3 Protocol Security Checker
 Checks DNP3 outstation exposure and Secure Authentication status.
 Author: Ali AlEnezi (SiteQ8)
 """

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════
 # OTAUD Module: SCADA System Auditor
-# Comprehensive SCADA security assessment
+# SCADA security assessment
 # ═══════════════════════════════════════════════════════════════
 
 run_scada_audit() {

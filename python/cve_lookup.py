@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OTAUD — CVE Lookup for OT/ICS Devices
+OTAUD: CVE Lookup for OT/ICS Devices
 Queries known CVE databases for vulnerabilities affecting ICS/OT equipment.
 Uses the NIST NVD API and a built-in offline database of critical ICS CVEs.
 Author: Ali AlEnezi (SiteQ8)
