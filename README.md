@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  OTAUD is designed to check for misconfigurations, unsecured practices, default credentials, protocol-level vulnerabilities, and compliance gaps across your entire OT environment. It is a one-of-a-kind toolkit that has everything you need for ICS, IoT, and OT security — built to help you secure your environment.
+  OTAUD is designed to check for misconfigurations, unsecured practices, default credentials, protocol-level vulnerabilities, and compliance gaps across your entire OT environment. It is a one-of-a-kind toolkit that has everything you need for ICS, IoT, and OT security, built to help you secure your environment.
 </p>
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Terminal Interface
 <p align="center">
@@ -52,7 +52,7 @@
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone the repository
@@ -71,9 +71,9 @@ sudo ./otaud.sh --interactive
 
 ---
 
-## ✨ Features
+## Features
 
-OTAUD includes **8 specialized audit modules**, **6 Python deep-analysis tools**, and **4 compliance standard checks** — covering every layer of the Purdue Enterprise Reference Architecture.
+OTAUD includes **8 specialized audit modules**, **6 Python deep-analysis tools**, and **4 compliance standard checks**, covering every layer of the Purdue Enterprise Reference Architecture.
 
 | Module | Description |
 |--------|-------------|
@@ -84,11 +84,11 @@ OTAUD includes **8 specialized audit modules**, **6 Python deep-analysis tools**
 | **SCADA System Audit** | SCADA platform fingerprinting (Ignition, WinCC, FactoryTalk, etc.), historian exposure, database security, network segmentation validation |
 | **IoT Discovery** | IoT device enumeration (mDNS/UPnP), MQTT anonymous access, default IoT credentials, firmware update channel security |
 | **Firmware Analysis** | Version extraction, CVE matching, debug interface detection, TFTP exposure, bootloader security, unsigned firmware upload |
-| **Compliance Checker** | IEC 62443, NIST SP 800-82, NERC CIP v5/v7, ISO 27001 — baseline scoring + framework-specific control checks |
+| **Compliance Checker** | IEC 62443, NIST SP 800-82, NERC CIP v5/v7, ISO 27001, baseline scoring + framework-specific control checks |
 
 ---
 
-## 🔌 Protocols
+## Protocols
 
 OTAUD checks for misconfigurations, unauthorized access, and missing authentication across all major ICS/OT communication protocols:
 
@@ -109,7 +109,7 @@ OTAUD checks for misconfigurations, unauthorized access, and missing authenticat
 
 ---
 
-## 🐍 Python Advanced Modules
+## Python Advanced Modules
 
 For deeper protocol-level analysis, OTAUD includes dedicated Python modules:
 
@@ -135,13 +135,13 @@ python3 python/report_gen.py -l reports/otaud_*.log -t 192.168.1.0/24 -o report.
 
 ---
 
-## 📋 Compliance Standards
+## Compliance Standards
 
 OTAUD validates your OT environment against four major industrial cybersecurity frameworks:
 
 | Standard | Coverage |
 |----------|----------|
-| **IEC 62443** | All 7 Foundational Requirements (FR 1–7): Identification & Authentication, Use Control, System Integrity, Data Confidentiality, Restricted Data Flow, Event Response, Resource Availability |
+| **IEC 62443** | All 7 Foundational Requirements (FR 1-7): Identification & Authentication, Use Control, System Integrity, Data Confidentiality, Restricted Data Flow, Event Response, Resource Availability |
 | **NIST SP 800-82 Rev 3** | Risk management, network architecture, defense-in-depth, ICS firewall rules, recommended hardening controls |
 | **NERC CIP v5/v7** | CIP-002 categorization, CIP-005 electronic security perimeters, CIP-007 system security management, CIP-010 configuration change management |
 | **ISO 27001** | Annex A controls in OT context: asset management, access control, operations security, communications security, business continuity |
@@ -156,7 +156,7 @@ OTAUD validates your OT environment against four major industrial cybersecurity 
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 OTAUD/
@@ -192,7 +192,7 @@ OTAUD/
 
 ---
 
-## 🖥️ Usage
+## Usage
 
 ```
 OTAUD — OT/ICS/IoT Security Auditing Toolkit v1.0.0
@@ -224,20 +224,20 @@ EXAMPLES:
 
 ---
 
-## 🔧 Dependencies
+## Dependencies
 
 **Required:**
 - Bash 4.0+
 - Python 3.8+
 
 **Recommended (for full functionality):**
-- `nmap` — network scanning and NSE scripts
-- `curl` — web interface checks
-- `openssl` — TLS/SSL analysis
-- `jq` — JSON processing
-- `dig` — DNS checks
-- `snmpwalk` — SNMP auditing
-- `netcat (nc)` — banner grabbing
+- `nmap`: network scanning and NSE scripts
+- `curl`: web interface checks
+- `openssl`: TLS/SSL analysis
+- `jq`: JSON processing
+- `dig`: DNS checks
+- `snmpwalk`: SNMP auditing
+- `netcat (nc)`: banner grabbing
 
 ```bash
 # Install all dependencies (Debian/Ubuntu)
@@ -246,23 +246,23 @@ sudo apt update && sudo apt install -y nmap curl openssl jq dnsutils snmp netcat
 
 ---
 
-## 🌐 Web GUI
+## Web GUI
 
 OTAUD includes a web-based GUI hosted on GitHub Pages that documents all modules, protocols, architecture mapping, and usage examples:
 
-**🔗 [https://siteq8.github.io/OTAUD/gui/](https://siteq8.github.io/OTAUD/gui/)**
+**[https://siteq8.github.io/OTAUD/gui/](https://siteq8.github.io/OTAUD/gui/)**
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 **OTAUD is designed for authorized security assessments only.** Always obtain proper written authorization before scanning any network or system. Unauthorized scanning of computer systems is illegal in most jurisdictions.
 
-This tool is provided for **defensive security purposes** — to help organizations identify and remediate vulnerabilities in their OT environments before adversaries can exploit them.
+This tool is provided for **defensive security purposes**, to help organizations identify and remediate vulnerabilities in their OT environments before adversaries can exploit them.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 
@@ -274,20 +274,14 @@ Contributions are welcome! Feel free to:
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**, see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👤 Author
+## Author
 
-**Ali AlEnezi** — [@SiteQ8](https://github.com/SiteQ8)
+**Ali AlEnezi**, [@SiteQ8](https://github.com/SiteQ8)
 
 Built with passion for securing critical infrastructure. 🔒
-
----
-
-<p align="center">
-  <strong>⭐ Star this repo if OTAUD helps secure your OT environment!</strong>
-</p>
