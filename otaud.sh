@@ -6,7 +6,7 @@
 # ║  Repo   : https://github.com/SiteQ8/OTAUD                          ║
 # ╚══════════════════════════════════════════════════════════════════════╝
 #
-# A comprehensive, all-in-one security auditing framework for
+# Security auditing framework for
 # Industrial Control Systems (ICS), IoT devices, and Operational
 # Technology (OT) environments.
 
